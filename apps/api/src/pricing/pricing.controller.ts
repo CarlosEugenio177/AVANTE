@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards, Request } from '@nestjs/common';
 import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -13,7 +13,7 @@ export class PricingController {
   }
 
   @Get('history')
-  history(@Request() req) {
-    return this.pricingService.history(req.user.sub);
+  history(@Request() req, @Query() query: any) {
+    return this.pricingService.history(req.user.sub, query);
   }
 }

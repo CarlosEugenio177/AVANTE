@@ -35,9 +35,21 @@ export class PricingService {
     });
   }
 
-  async history(userId: string) {
+  async history(userId: string, query: any = {}) {
+    const { productId, startDate, endDate } = query;
+    const where: any = { userId };
+
+    if (productId) {
+      where.productId = productId;
+    }
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = new Date(startDate);
+      if (endDate) where.createdAt.lte = new Date(endDate);
+    }
+
     return this.prisma.priceCalculation.findMany({
-      where: { userId },
+      where,
       include: { product: true },
       orderBy: { createdAt: 'desc' }
     });

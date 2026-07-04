@@ -1,14 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calculator as CalcIcon, History as HistoryIcon } from 'lucide-react';
+import { LayoutDashboard, Package, Calculator as CalcIcon, History as HistoryIcon, Tag } from 'lucide-react';
 import { useAuthStore } from './store/authStore';
 import { useAppStore } from './store/appStore';
-import Dashboard from './pages/Dashboard';
-import Products from './pages/Products';
-import Calculator from './pages/Calculator';
-import History from './pages/History';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Toaster } from 'sonner';
+
+// Lazy load pages for performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Products = lazy(() => import('./pages/Products'));
+const Calculator = lazy(() => import('./pages/Calculator'));
+const History = lazy(() => import('./pages/History'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Promotions = lazy(() => import('./pages/Promotions'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore(state => state.token);
@@ -85,6 +91,10 @@ function MainLayout({ children }: { children: React.ReactNode }) {
             <HistoryIcon size={22} className="mb-1" />
             <span className="text-[10px] font-medium tracking-wide">Histórico</span>
           </Link>
+          <Link to="/promotions" className={`flex flex-col items-center transition-all duration-300 transform hover:scale-105 active:scale-95 ${isActive('/promotions')}`}>
+            <Tag size={22} className="mb-1" />
+            <span className="text-[10px] font-medium tracking-wide">Promoção</span>
+          </Link>
         </nav>
       </div>
     </div>
@@ -103,22 +113,31 @@ function App() {
   }, [theme]);
 
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/*" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/calculator" element={<Calculator />} />
-              <Route path="/history" element={<History />} />
-            </Routes>
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-    </Routes>
+    <ErrorBoundary>
+      <Toaster position="top-center" theme={theme === 'dark' ? 'dark' : 'light'} richColors />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div></div>}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/*" element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Suspense fallback={<div className="flex justify-center p-8"><div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div></div>}>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/calculator" element={<Calculator />} />
+                    <Route path="/history" element={<History />} />
+                    <Route path="/promotions" element={<Promotions />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

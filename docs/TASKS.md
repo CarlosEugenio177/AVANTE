@@ -1,11 +1,13 @@
 # TASKS
 
 ## Em andamento
-- Polimento de UI (Design Premium)
-- Preparação para Deploy (Vercel)
+- Realizar o primeiro Deploy real (Vercel / Render / Supabase)
+- Onboarding dos primeiros testadores da Flora Pura
 
-## Concluído
-- Autenticação e Integração Frontend-Backend
-- Conexão e sincronização do BD (Prisma)
-- Docs
-- Monorepo Setup
+## Concluído (V0.2)
+- Módulo de Promoções (Semáforo)
+- Integração PWA e Otimizações Lighthouse (Lazy Load)
+- Skeletons, Toasts (sonner) e Error Boundary
+- Refatoração Dashboard (Endpoint de Stats)
+- Paginação e Filtros de Produtos
+- Auto-save e Exportação CSV da Calculadora e Histórico
