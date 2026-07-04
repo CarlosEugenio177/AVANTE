@@ -54,4 +54,25 @@ export class PricingService {
       orderBy: { createdAt: 'desc' }
     });
   }
+
+  async exportCsv(userId: string, query: any = {}) {
+    const history = await this.history(userId, query);
+    
+    const headers = ['Produto', 'Data', 'Custo', 'Margem (%)', 'Lucro Liquido', 'Preço Venda'];
+    const rows = history.map((h: any) => {
+      const date = new Date(h.createdAt);
+      const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+      return [
+        h.product?.name || 'Desconhecido',
+        formattedDate,
+        h.cost,
+        h.retailMargin,
+        h.netProfit,
+        h.retailPrice
+      ];
+    });
+
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    return csvContent;
+  }
 }

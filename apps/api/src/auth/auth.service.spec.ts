@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 vi.mock('bcryptjs', () => ({
   compare: vi.fn(),

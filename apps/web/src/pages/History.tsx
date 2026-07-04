@@ -29,26 +29,29 @@ export default function History() {
     }
   });
 
-  const exportCsv = () => {
+  const exportCsv = async () => {
     if (!history.length) return;
-    const headers = ['Produto', 'Data', 'Custo', 'Margem (%)', 'Lucro Liquido', 'Preço Venda'];
-    const rows = history.map((h: any) => [
-      h.product?.name || 'Desconhecido',
-      format(new Date(h.createdAt), 'dd/MM/yyyy HH:mm'),
-      h.cost,
-      h.retailMargin,
-      h.netProfit,
-      h.retailPrice
-    ]);
-    const csvContent = [headers.join(','), ...rows.map((r: any) => r.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', 'historico_calculos.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    trackEvent('csv_exported');
+    
+    try {
+      const params = new URLSearchParams();
+      if (productId) params.append('productId', productId);
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+      
+      const csvData = await apiFetch(`/pricing/export-csv?${params.toString()}`);
+      
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', 'historico_calculos.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      trackEvent('csv_exported');
+    } catch (error) {
+      console.error('Erro ao exportar CSV', error);
+    }
   };
 
   return (

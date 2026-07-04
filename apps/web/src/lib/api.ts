@@ -50,5 +50,12 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
 
   // Handle empty responses
   const text = await response.text();
-  return text ? JSON.parse(text) : {};
+  if (!text) return {};
+  
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    return JSON.parse(text);
+  }
+  
+  return text;
 }
