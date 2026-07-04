@@ -1,0 +1,23 @@
+import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:5173',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+  // We don't start the web server from playwright here,
+  // we assume it's running via `npm run dev` at the root for this test environment.
+});

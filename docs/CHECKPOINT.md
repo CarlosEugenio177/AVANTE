@@ -2,6 +2,7 @@
 2026-07-04 10:40:00
 
 ## Status Geral
+V0.3.1 Concluída (Testes, Qualidade e Estabilidade)
 V0.3 Concluída (Analytics, Feedback e Validação)
 
 ## Funcionalidades prontas
@@ -18,6 +19,12 @@ V0.3 Concluída (Analytics, Feedback e Validação)
 - Painel Administrativo de Métricas KPIs de Produto
 - Sistema de Onboarding Dinâmico (0% a 100%)
 - Configurações do Perfil e edição de dados
+
+## Testes Implementados (V0.3.1)
+- Unitários do Backend (Serviços) com Vitest e 100% de cobertura (Zustand e pacote Shared inclusos)
+- Integração da API (Supertest) testando Core Flow + Banco PostgreSQL Test
+- E2E WebUI via Playwright (Apps/E2E)
+- Pipeline CI configurada (Github Actions)
 
 ## Próximas tarefas
 - Deploy em infraestrutura real (Vercel + Banco de Nuvem)
