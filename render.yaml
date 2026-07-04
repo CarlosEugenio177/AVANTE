@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: avante-api
+    env: node
+    buildCommand: npm install && npx turbo run build --filter=@avante/api
+    startCommand: cd apps/api && npx prisma db push --accept-data-loss && node dist/main
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_SECURE
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
