@@ -14,7 +14,12 @@ const History = lazy(() => import('./pages/History'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const Promotions = lazy(() => import('./pages/Promotions'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const FeedbackAdmin = lazy(() => import('./pages/FeedbackAdmin'));
+const Settings = lazy(() => import('./pages/Settings'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+import { FeedbackWidget } from './components/ui/FeedbackWidget';
+import { Settings as SettingsIcon, ShieldAlert, Users } from 'lucide-react';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore(state => state.token);
@@ -95,6 +100,10 @@ function MainLayout({ children }: { children: React.ReactNode }) {
             <Tag size={22} className="mb-1" />
             <span className="text-[10px] font-medium tracking-wide">Promoção</span>
           </Link>
+          <Link to="/settings" className={`flex flex-col items-center transition-all duration-300 transform hover:scale-105 active:scale-95 ${isActive('/settings')}`}>
+            <SettingsIcon size={22} className="mb-1" />
+            <span className="text-[10px] font-medium tracking-wide">Ajustes</span>
+          </Link>
         </nav>
       </div>
     </div>
@@ -129,10 +138,14 @@ function App() {
                     <Route path="/calculator" element={<Calculator />} />
                     <Route path="/history" element={<History />} />
                     <Route path="/promotions" element={<Promotions />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/feedbacks" element={<FeedbackAdmin />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
               </MainLayout>
+              <FeedbackWidget />
             </ProtectedRoute>
           } />
         </Routes>

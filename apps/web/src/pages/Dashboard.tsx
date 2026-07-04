@@ -5,14 +5,36 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { Package, Calculator, TrendingUp, DollarSign } from 'lucide-react';
 
 export default function Dashboard() {
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: () => apiFetch('/settings/profile')
+  });
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ['dashboardStats'],
     queryFn: () => apiFetch('/dashboard/stats')
   });
 
+  const progress = profile?.onboardingProgress || 0;
+
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-primary">Dashboard</h1>
+      <div className="flex justify-between items-end">
+        <h1 className="text-2xl font-bold text-primary">Dashboard</h1>
+        {profile?.role === 'ADMIN' && (
+          <a href="/admin" className="text-xs font-bold text-primary underline">Ver Validação</a>
+        )}
+      </div>
+
+      {progress < 100 && (
+        <div className="bg-primary/10 border border-primary/30 p-4 rounded-xl shadow-sm mb-4">
+          <h2 className="text-sm font-bold text-primary mb-2">Seu Progresso Inicial ({progress}%)</h2>
+          <div className="w-full bg-background rounded-full h-2 mb-2 overflow-hidden">
+            <div className="bg-primary h-2 transition-all duration-500" style={{ width: `${progress}%` }}></div>
+          </div>
+          <p className="text-xs text-muted-foreground">Cadastre produtos, faça simulações e analise promoções para desbloquear 100%.</p>
+        </div>
+      )}
       
       <div className="grid grid-cols-2 gap-4">
         {/* Total Products */}

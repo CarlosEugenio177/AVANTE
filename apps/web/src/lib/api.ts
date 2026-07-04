@@ -31,6 +31,20 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
     } catch (e) {
       // Ignora erro de parse
     }
+
+    // Dispara log de erro para analytics (fire and forget) sem usar apiFetch para evitar loop
+    fetch(`${API_BASE_URL}/analytics`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({
+        event: 'api_error',
+        metadata: { endpoint, status: response.status, message }
+      })
+    }).catch(() => {});
+
     throw new Error(message);
   }
 

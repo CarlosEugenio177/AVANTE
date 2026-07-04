@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '../lib/api';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 export default function Promotions() {
+  const { trackEvent } = useAnalytics();
   const [productId, setProductId] = useState('');
   const [newPrice, setNewPrice] = useState<number | ''>('');
   
@@ -33,6 +35,17 @@ export default function Promotions() {
     margin = (profit / Number(newPrice)) * 100;
     discount = currentPrice > 0 ? ((currentPrice - Number(newPrice)) / currentPrice) * 100 : 0;
   }
+
+  // Trigger event when simulation happens
+  useEffect(() => {
+    if (newPrice !== '' && newPrice > 0 && selectedProduct) {
+      const handler = setTimeout(() => {
+        trackEvent('promotion_simulated', { productId: selectedProduct.id, margin, discount });
+        apiFetch('/settings/onboarding', { method: 'PUT', body: JSON.stringify({ progress: 100 }) }).catch(()=>{});
+      }, 1000);
+      return () => clearTimeout(handler);
+    }
+  }, [newPrice, selectedProduct]);
 
   const getStatusColor = (m: number) => {
     if (m >= 20) return 'bg-green-100 text-green-800 border-green-300';

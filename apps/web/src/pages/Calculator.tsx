@@ -3,8 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { calculatePrice } from '@avante/shared';
 import { apiFetch } from '../lib/api';
 import { toast } from 'sonner';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 export default function Calculator() {
+  const { trackEvent } = useAnalytics();
   const queryClient = useQueryClient();
   const [productId, setProductId] = useState('');
   const [cost, setCost] = useState(15);
@@ -13,6 +15,7 @@ export default function Calculator() {
   const [cardFee, setCardFee] = useState(3);
   const [margin, setMargin] = useState(30);
   
+  const [startTime] = useState(Date.now());
   const [result, setResult] = useState<any>(null);
   const [discountPercent, setDiscountPercent] = useState(0);
 
@@ -29,6 +32,8 @@ export default function Calculator() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pricingHistory'] });
       toast.success('Cálculo salvo automaticamente', { position: 'bottom-center' });
+      trackEvent('calculation_created', { calculationTime: Math.round((Date.now() - startTime) / 1000) });
+      apiFetch('/settings/onboarding', { method: 'PUT', body: JSON.stringify({ progress: 66 }) }).catch(()=>{});
     }
   });
 

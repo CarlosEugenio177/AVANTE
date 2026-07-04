@@ -12,9 +12,15 @@ model User {
   name             String
   email            String             @unique
   password         String
+  role             String             @default("USER")
+  onboardingProgress Int              @default(0)
   createdAt        DateTime           @default(now())
+  
   products         Product[]
   priceCalculations PriceCalculation[]
+  analyticsEvents  AnalyticsEvent[]
+  feedbacks        Feedback[]
+  auditLogs        AuditLog[]
 }
 
 model Product {
@@ -61,4 +67,37 @@ model PriceCalculation {
   
   userId            String
   user              User     @relation(fields: [userId], references: [id])
+}
+
+model AnalyticsEvent {
+  id          String   @id @default(uuid())
+  event       String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model Feedback {
+  id          String   @id @default(uuid())
+  type        String
+  message     String
+  page        String?
+  status      String   @default("novo") // novo, em análise, resolvido
+  createdAt   DateTime @default(now())
+
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  action      String
+  entity      String
+  entityId    String?
+  createdAt   DateTime @default(now())
+
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
 }

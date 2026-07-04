@@ -6,8 +6,10 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Edit2, Trash2, Search, Filter } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 export default function Products() {
+  const { trackEvent } = useAnalytics();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -54,6 +56,8 @@ export default function Products() {
       setShowForm(false);
       resetForm();
       toast.success('Produto criado com sucesso!');
+      trackEvent('product_created');
+      apiFetch('/settings/onboarding', { method: 'PUT', body: JSON.stringify({ progress: 33 }) }).catch(()=>{});
     },
     onError: () => toast.error('Erro ao criar produto.')
   });

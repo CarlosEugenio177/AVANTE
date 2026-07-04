@@ -5,8 +5,10 @@ import { format } from 'date-fns';
 import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Download } from 'lucide-react';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 export default function History() {
+  const { trackEvent } = useAnalytics();
   const [productId, setProductId] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -46,6 +48,7 @@ export default function History() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    trackEvent('csv_exported');
   };
 
   return (

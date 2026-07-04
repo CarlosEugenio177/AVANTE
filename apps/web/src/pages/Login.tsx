@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { apiFetch } from '../lib/api';
 import { ThemeToggle } from '../App';
+import { trackEvent } from '../hooks/useAnalytics';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,7 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
       setToken(data.access_token);
+      trackEvent('user_logged_in');
       navigate('/');
     } catch (err: any) {
       setError(err.message);
