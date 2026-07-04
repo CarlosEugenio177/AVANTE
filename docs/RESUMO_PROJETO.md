@@ -9,8 +9,8 @@ Este documento consolida tudo o que foi implementado e construído no projeto at
 
 ## 2. Backend (NestJS + Prisma + PostgreSQL)
 - **API Modular (NestJS):** Backend estruturado em módulos independentes (`Auth`, `Products`, `Calculations`), garantindo escalabilidade.
-- **Banco de Dados (Prisma ORM):**
-  - Configurado com PostgreSQL, sincronizado localmente via `docker-compose.yml`.
+- **Banco de Dados em Nuvem (Prisma ORM + Neon Postgres):**
+  - Configurado com PostgreSQL, hospedado nativamente na nuvem usando **Neon (Serverless Postgres)** via integração Vercel.
   - Tabelas principais: `User` (autenticação), `Product` (produtos com categorias e custo) e `Calculation` (histórico financeiro anexado aos produtos).
 - **Autenticação (JWT):** Implementado login e registro seguros. O backend emite tokens JWT para as sessões dos usuários logados, barrando acessos não autorizados nos endpoints críticos.
 
@@ -30,7 +30,9 @@ Este documento consolida tudo o que foi implementado e construído no projeto at
 4. **Calculadora Financeira Avançada:** Uma tela inteligente onde o usuário insere o produto e os custos (impostos, taxa de cartão, margem e custo fixo). O sistema processa os cálculos utilizando nosso pacote `@avante/shared` e devolve *Markup, Lucro Líquido, Preço de Venda* e o *Desconto Máximo permitido*.
 5. **Histórico:** Permite revisar todas as simulações já salvas com suas datas e resultados financeiros de maneira clara.
 
-## 5. Preparação para Produção (Vercel)
-- **Regras de Roteamento:** O `vercel.json` foi devidamente mapeado no frontend para dar suporte ao React SPA.
-- **Variáveis Dinâmicas:** O ambiente local e o de produção estão parametrizados via `.env` (`VITE_API_URL`), o que permite migrar o backend de "localhost" para um servidor em nuvem real (como Render ou Railway) com facilidade.
-- **Pronto para Deploy:** O turborepo já orquestra os comandos de *build* paralelos para empacotar o código para publicação a qualquer instante.
+## 5. Arquitetura de Produção (Cloud)
+O sistema hoje se encontra totalmente hospedado e funcional na nuvem (Live), dividido da seguinte forma:
+- **Frontend (Vercel):** Hospedagem serverless de altíssima performance para o painel React (SPA).
+- **Backend (Render):** O servidor NestJS roda de forma contínua em um Web Service no Render, garantindo a execução das regras de negócio, envio de e-mails (SMTP) e segurança da API.
+- **Banco de Dados (Neon Postgres):** O banco relacional foi provisionado na nuvem (AWS US-East) e integrado à stack via Prisma.
+- **Integração Front-Back:** O frontend consome a API do Render automaticamente através de variáveis de ambiente (`VITE_API_URL` chumbada para produção).

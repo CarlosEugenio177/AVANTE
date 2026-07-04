@@ -1,10 +1,10 @@
 # TASKS
 
 ## Em andamento
-- Realizar o primeiro Deploy real (Vercel / Render / Supabase)
 - Onboarding dos primeiros testadores da Flora Pura
 
 ## Concluído (V0.2)
+- Realizar o primeiro Deploy real na nuvem (Vercel + Render + Neon Postgres)
 - Módulo de Promoções (Semáforo)
 - Integração PWA e Otimizações Lighthouse (Lazy Load)
 - Skeletons, Toasts (sonner) e Error Boundary
