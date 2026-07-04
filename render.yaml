@@ -3,7 +3,7 @@ services:
     name: avante-api
     env: node
     buildCommand: npm install && npx turbo run build --filter=@avante/api
-    startCommand: cd apps/api && npx prisma db push --accept-data-loss && node dist/main
+    startCommand: cd apps/api && npx prisma db push --accept-data-loss && node dist/src/main
     envVars:
       - key: NODE_VERSION
         value: 20
