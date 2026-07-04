@@ -165,18 +165,39 @@ export default function Products() {
       )}
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-card p-4 rounded-lg shadow space-y-3 border border-border animate-in fade-in slide-in-from-top-4">
-          <input required placeholder="Nome do Produto" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-          <div className="grid grid-cols-2 gap-2">
-            <input required placeholder="Categoria" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
-            <input required placeholder="Fornecedor" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.supplier} onChange={e => setFormData({...formData, supplier: e.target.value})} />
-            <input required placeholder="Código" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})} />
-            <input required type="number" step="0.01" placeholder="Custo (R$)" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.cost} onChange={e => setFormData({...formData, cost: Number(e.target.value)})} />
-            <input required type="number" step="0.01" placeholder="Preço (R$)" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.salePrice} onChange={e => setFormData({...formData, salePrice: Number(e.target.value)})} />
-            <input required type="number" step="0.1" placeholder="Margem (%)" className="w-full bg-background text-foreground border-input p-2 rounded border" value={formData.margin} onChange={e => setFormData({...formData, margin: Number(e.target.value)})} />
+        <form onSubmit={handleSubmit} className="bg-card p-5 rounded-xl shadow-md space-y-4 border border-border animate-in fade-in slide-in-from-top-4">
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-muted-foreground uppercase">Nome do Produto</label>
+            <input required placeholder="Ex: Creme Hidratante" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
           </div>
-          <button type="submit" disabled={createMutation.isPending || updateMutation.isPending} className="w-full bg-primary text-primary-foreground py-2 rounded font-bold">
-            {createMutation.isPending || updateMutation.isPending ? 'Salvando...' : 'Salvar'}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase">Categoria</label>
+              <input required placeholder="Ex: Cosméticos" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase">Fornecedor</label>
+              <input required placeholder="Ex: Natura" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.supplier} onChange={e => setFormData({...formData, supplier: e.target.value})} />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase">Código / SKU</label>
+              <input required placeholder="Ex: NAT-123" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.code} onChange={e => setFormData({...formData, code: e.target.value})} />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase">Custo Base (R$)</label>
+              <input required type="number" step="0.01" placeholder="0.00" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.cost === 0 && !editingId ? '' : formData.cost} onChange={e => setFormData({...formData, cost: Number(e.target.value)})} />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase">Preço de Venda (R$)</label>
+              <input required type="number" step="0.01" placeholder="0.00" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.salePrice === 0 && !editingId ? '' : formData.salePrice} onChange={e => setFormData({...formData, salePrice: Number(e.target.value)})} />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase">Margem (%)</label>
+              <input required type="number" step="0.1" placeholder="0.0" className="w-full bg-background text-foreground border border-input focus:ring-2 focus:ring-primary/20 focus:border-primary p-2.5 rounded-lg transition-all outline-none" value={formData.margin === 0 && !editingId ? '' : formData.margin} onChange={e => setFormData({...formData, margin: Number(e.target.value)})} />
+            </div>
+          </div>
+          <button type="submit" disabled={createMutation.isPending || updateMutation.isPending} className="w-full bg-primary text-primary-foreground py-3 mt-4 rounded-lg font-bold hover:bg-primary/90 transition-colors">
+            {createMutation.isPending || updateMutation.isPending ? 'Salvando...' : 'Salvar Produto'}
           </button>
         </form>
       )}
