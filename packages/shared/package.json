@@ -5,12 +5,17 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@avante/types": "*"
   },
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "@vitest/coverage-v8": "^4.1.9",
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.9"
   }
 }
