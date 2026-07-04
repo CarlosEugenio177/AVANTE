@@ -96,151 +96,93 @@ export default function Calculator() {
   const discountedProfit = discountedPrice - Number(cost) - (discountedPrice * (totalVariableCosts / 100));
 
   return (
-    <div className="space-y-6 pb-6">
-      <div className="flex items-center space-x-2">
+    <div className="max-w-xl mx-auto space-y-6 pb-8">
+      <div className="flex items-center space-x-2 border-b border-border/50 pb-4">
         <CalcIcon className="text-primary" size={24} />
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Calculadora Inteligente</h1>
+        <h1 className="text-xl font-semibold text-foreground">Calculadora Inteligente</h1>
       </div>
 
-      {/* RESULT HERO CARD (Linear-like) */}
-      <div className="relative overflow-hidden bg-card rounded-3xl border border-border/60 shadow-sm">
-        <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-primary via-purple-500 to-primary"></div>
-        <div className="p-6 md:p-8 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
-          <div className="space-y-1">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Preço Sugerido</p>
-            {result ? (
-              <div className="flex items-baseline space-x-1">
-                <span className="text-2xl text-muted-foreground font-semibold">R$</span>
-                <h2 className="text-6xl md:text-7xl font-black tracking-tighter text-foreground">
-                  {result.salePrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </h2>
-              </div>
-            ) : (
-              <h2 className="text-6xl md:text-7xl font-black tracking-tighter text-muted-foreground/20">--,--</h2>
-            )}
-          </div>
-          
-          <div className="flex flex-col gap-3 w-full md:w-auto">
-            <div className="bg-emerald-500/10 border border-emerald-500/20 px-5 py-3 rounded-2xl flex items-center justify-between gap-6 md:min-w-[220px]">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600/80">Lucro Puro</span>
-              <span className="text-lg font-black text-emerald-500">
-                {result ? `R$ ${result.netProfit.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '--'}
-              </span>
-            </div>
-            <div className="bg-secondary/50 border border-border/50 px-5 py-3 rounded-2xl flex items-center justify-between gap-6 md:min-w-[220px]">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Markup</span>
-              <span className="text-lg font-black text-foreground">
-                {result ? `${result.markup.toFixed(1)}%` : '--'}
-              </span>
-            </div>
-          </div>
+      {/* RESULT SECTION */}
+      <div className="bg-card rounded-xl border border-border shadow-sm p-6 text-center space-y-4">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">Preço Sugerido</p>
+          {result ? (
+            <h2 className="text-5xl font-bold tracking-tight text-foreground">
+              <span className="text-2xl text-muted-foreground mr-1">R$</span>
+              {result.salePrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </h2>
+          ) : (
+            <h2 className="text-5xl font-bold tracking-tight text-muted-foreground/30">--,--</h2>
+          )}
         </div>
         
-        {/* SIMULADOR DE DESCONTO */}
-        {result && (
-          <div className="border-t border-border/50 bg-secondary/20 p-6 md:px-8">
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="font-bold text-foreground flex items-center">
-                <Percent size={16} className="mr-2 text-primary" />
-                Simular Desconto na Venda
-              </h4>
-              <span className="text-sm font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full shadow-sm">
-                {discountPercent}%
-              </span>
-            </div>
-            
-            <input 
-              type="range" min="0" max={result.maxDiscount.toFixed(0)} 
-              value={discountPercent} onChange={e => setDiscountPercent(Number(e.target.value))}
-              className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary mb-6"
-            />
-            
-            <div className="grid grid-cols-2 gap-4">
-               <div className="p-4 bg-background rounded-2xl border border-border/60">
-                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Preço com desconto</p>
-                 <p className="text-xl font-black text-foreground">R$ {discountedPrice.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
-               </div>
-               <div className="p-4 bg-background rounded-2xl border border-border/60">
-                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Novo Lucro Líquido</p>
-                 <p className={`text-xl font-black ${discountedProfit > 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                   R$ {discountedProfit.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                 </p>
-               </div>
-            </div>
+        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
+          <div>
+            <p className="text-xs font-medium text-muted-foreground uppercase">Lucro Líquido</p>
+            <p className="text-lg font-semibold text-emerald-500">
+              {result ? `R$ ${result.netProfit.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '--'}
+            </p>
           </div>
-        )}
+          <div>
+            <p className="text-xs font-medium text-muted-foreground uppercase">Markup</p>
+            <p className="text-lg font-semibold text-foreground">
+              {result ? `${result.markup.toFixed(1)}%` : '--'}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* INPUT FORM (Clean / Linear Style) */}
-      <div className="bg-card rounded-3xl border border-border/60 shadow-sm p-6 md:p-8 space-y-6">
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Vincular Produto (Auto-save)</label>
+      {/* INPUT FORM SECTION */}
+      <div className="bg-card rounded-xl border border-border shadow-sm p-6 space-y-5">
+        
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-foreground">Produto (Auto-save)</label>
           <select 
             value={productId} 
             onChange={e => setProductId(e.target.value)} 
-            className="w-full bg-background text-foreground border border-input focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl p-3 h-12 transition-all outline-none"
+            className="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none"
           >
-            <option value="">Selecione um produto cadastrado...</option>
+            <option value="">Nenhum (Apenas Simulação)</option>
             {products?.items?.map((p: any) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-              Custo Base (R$)
-            </label>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-muted-foreground">Custo Base (R$)</label>
             <input 
-              type="number" 
-              value={cost} 
-              onChange={e => setCost(e.target.value === '' ? '' : Number(e.target.value))} 
-              className="w-full bg-background text-foreground font-medium border border-input focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl p-3 h-12 transition-all outline-none" 
+              type="number" value={cost} onChange={e => setCost(e.target.value === '' ? '' : Number(e.target.value))} 
+              className="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" 
             />
           </div>
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-              Custos Fixos da Empresa (%)
-            </label>
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-muted-foreground">Margem Desejada (%)</label>
             <input 
-              type="number" 
-              value={fixedCosts} 
-              onChange={e => setFixedCosts(e.target.value === '' ? '' : Number(e.target.value))} 
-              className="w-full bg-background text-foreground font-medium border border-input focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl p-3 h-12 transition-all outline-none" 
+              type="number" value={margin} onChange={e => setMargin(e.target.value === '' ? '' : Number(e.target.value))} 
+              className="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" 
             />
           </div>
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-              Impostos (%)
-            </label>
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-muted-foreground">Custos Fixos (%)</label>
             <input 
-              type="number" 
-              value={tax} 
-              onChange={e => setTax(e.target.value === '' ? '' : Number(e.target.value))} 
-              className="w-full bg-background text-foreground font-medium border border-input focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl p-3 h-12 transition-all outline-none" 
+              type="number" value={fixedCosts} onChange={e => setFixedCosts(e.target.value === '' ? '' : Number(e.target.value))} 
+              className="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" 
             />
           </div>
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-              Taxa de Cartão (%)
-            </label>
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-muted-foreground">Impostos (%)</label>
             <input 
-              type="number" 
-              value={cardFee} 
-              onChange={e => setCardFee(e.target.value === '' ? '' : Number(e.target.value))} 
-              className="w-full bg-background text-foreground font-medium border border-input focus:bg-background focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl p-3 h-12 transition-all outline-none" 
+              type="number" value={tax} onChange={e => setTax(e.target.value === '' ? '' : Number(e.target.value))} 
+              className="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" 
             />
           </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-widest text-primary mb-2">
-              Margem de Lucro Desejada (%)
-            </label>
+          <div className="space-y-1 col-span-2">
+            <label className="text-sm font-medium text-muted-foreground">Taxa de Cartão/Marketplace (%)</label>
             <input 
-              type="number" 
-              value={margin} 
-              onChange={e => setMargin(e.target.value === '' ? '' : Number(e.target.value))} 
-              className="w-full bg-primary/5 text-primary font-bold border border-primary/20 focus:bg-primary/10 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 rounded-xl p-3 h-12 transition-all outline-none" 
+              type="number" value={cardFee} onChange={e => setCardFee(e.target.value === '' ? '' : Number(e.target.value))} 
+              className="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" 
             />
           </div>
         </div>
@@ -248,7 +190,7 @@ export default function Calculator() {
         <button 
           onClick={handleUpdateProductPrice}
           disabled={!productId || updatePriceMutation.isPending}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-4 rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all mt-4 flex items-center justify-center shadow-md"
+          className="w-full bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-medium disabled:opacity-50 mt-2"
         >
           {updatePriceMutation.isPending ? 'Atualizando...' : 'Atualizar Preço no Cadastro'}
         </button>

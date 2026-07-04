@@ -54,6 +54,9 @@ export class ProductsService {
   }
 
   async update(id: string, userId: string, data: any) {
+    const product = await this.prisma.product.findFirst({ where: { id, userId } });
+    if (!product) throw new Error('Produto não encontrado ou acesso negado.');
+    
     return this.prisma.product.update({
       where: { id },
       data,

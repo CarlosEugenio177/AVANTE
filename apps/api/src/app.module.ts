@@ -9,11 +9,12 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { AuditModule } from './audit/audit.module';
 import { SettingsModule } from './settings/settings.module';
+import { MailModule } from './mail/mail.module';
 import { HealthController } from './core/health.controller';
 import { GlobalExceptionFilter } from './core/global-exception.filter';
 
 @Module({
-  imports: [PrismaModule, AuthModule, ProductsModule, PricingModule, DashboardModule, AnalyticsModule, FeedbackModule, AuditModule, SettingsModule],
+  imports: [PrismaModule, AuthModule, ProductsModule, PricingModule, DashboardModule, AnalyticsModule, FeedbackModule, AuditModule, SettingsModule, MailModule],
   controllers: [HealthController],
   providers: [
     {

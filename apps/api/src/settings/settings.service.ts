@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 
@@ -8,7 +8,7 @@ export class SettingsService {
 
   async getProfile(userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new UnauthorizedException('User not found');
     return {
       id: user.id,
       name: user.name,
