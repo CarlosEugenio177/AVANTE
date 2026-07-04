@@ -1,5 +1,4 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
 
 export default defineConfig({
   testDir: './tests',
@@ -14,10 +13,36 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'iPhone SE',
+      use: { 
+        ...devices['iPhone SE'],
+      },
+    },
+    {
+      name: 'iPhone 14 Pro',
+      use: { 
+        ...devices['iPhone 14 Pro'],
+      },
+    },
+    {
+      name: 'Pixel 7',
+      use: { 
+        ...devices['Pixel 7'],
+      },
+    },
+    {
+      name: 'Tablet',
+      use: { 
+        ...devices['iPad Mini'],
+        viewport: { width: 768, height: 1024 }
+      },
+    },
+    {
+      name: 'Desktop',
+      use: { 
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 }
+      },
     },
   ],
-  // We don't start the web server from playwright here,
-  // we assume it's running via `npm run dev` at the root for this test environment.
 });

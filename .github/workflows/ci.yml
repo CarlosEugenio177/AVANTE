@@ -10,21 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: password123
-          POSTGRES_DB: avante_test
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -32,7 +17,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '24'
 
     - name: Install Turborepo
       run: npm install -g turbo
@@ -43,8 +28,12 @@ jobs:
     - name: Generate Prisma Client
       run: npm run db:generate
 
-    - name: Push Test Schema
-      run: npx dotenv -e apps/api/.env.test -- prisma db push --schema=packages/shared/prisma/schema.prisma --accept-data-loss
+    - name: Create Env Files
+      run: |
+        echo "DATABASE_URL=postgresql://root:password123@localhost:5433/avante_test?schema=public" > apps/api/.env.test
+        echo "JWT_SECRET=test_secret_key_123" >> apps/api/.env.test
+        echo "DATABASE_URL=postgresql://root:password123@localhost:5433/avante_test?schema=public" > apps/api/.env
+        echo "JWT_SECRET=test_secret_key_123" >> apps/api/.env
 
     - name: Lint
       run: turbo run lint
@@ -54,9 +43,6 @@ jobs:
 
     - name: API Integration Tests
       run: turbo run test:e2e
-      env:
-        DATABASE_URL: postgresql://root:password123@localhost:5433/avante_test?schema=public
-        JWT_SECRET: test_secret_key_123
 
     - name: Install Playwright Browsers
       run: cd apps/e2e && npx playwright install --with-deps chromium
@@ -66,18 +52,29 @@ jobs:
 
     - name: Playwright E2E Tests
       run: |
+        # Ensure test database is running (it should be from test:e2e, but just in case)
+        cd apps/api && docker-compose -f docker-compose.test.yml up -d
+        
         # Start API
         cd apps/api && npm run start:dev &
+        
         # Start Web Preview
         cd apps/web && npm run preview -- --port 5173 &
+        
         # Wait for services
-        sleep 10
-        # Run Playwright
+        sleep 15
+        
+        # Run Playwright E2E and Visual Tests
         cd apps/e2e && npm run test
       env:
-        DATABASE_URL: postgresql://root:password123@localhost:5433/avante_test?schema=public
-        JWT_SECRET: test_secret_key_123
         VITE_API_URL: http://localhost:3000
+
+    - name: Run Lighthouse CI
+      run: |
+        npm install -g @lhci/cli
+        lhci autorun
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
     - name: Upload Playwright Report
       if: always()

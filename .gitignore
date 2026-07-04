@@ -122,3 +122,6 @@ dist
 *.db-journal
 postgres-data/
 pgdata/
+
+*storybook.log
+storybook-static
