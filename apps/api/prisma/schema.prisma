@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String             @id @default(uuid())
+  name             String
+  email            String             @unique
+  password         String
+  createdAt        DateTime           @default(now())
+  products         Product[]
+  priceCalculations PriceCalculation[]
+}
+
+model Product {
+  id               String             @id @default(uuid())
+  name             String
+  category         String
+  supplier         String
+  cost             Float
+  salePrice        Float
+  margin           Float
+  code             String
+  notes            String?
+  createdAt        DateTime           @default(now())
+  
+  userId           String
+  user             User               @relation(fields: [userId], references: [id])
+
+  priceCalculations PriceCalculation[]
+}
+
+model PriceCalculation {
+  id                String   @id @default(uuid())
+  
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id])
+  
+  cost              Float
+  fixedCostsPercent Float
+  taxPercent        Float
+  cardFeePercent    Float
+  retailMargin      Float
+  wholesaleMargin   Float
+  promotionMargin   Float
+  
+  retailPrice       Float
+  wholesalePrice    Float
+  promotionPrice    Float
+  
+  maxDiscount       Float
+  netProfit         Float
+  markup            Float
+  
+  createdAt         DateTime @default(now())
+  
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+}
